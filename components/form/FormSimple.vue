@@ -1,126 +1,128 @@
 <template>
-	<Form
-		class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto"
-		@submit="onSubmit"
-	>
-		<pre class="text-black">
-			{{ formValues }}
-		</pre
-		>
-
-		<FieldSet>
-			<FormTitle>Customer</FormTitle>
-			<Field name="name" rules="required" v-slot="{ field, errors }">
-				<Input
-					v-bind="field"
-					label="Name"
-					placeholder="My name is..."
-					@update:value="handleInputValue('name', $event)"
-				/>
-				<ErrorMessage name="name" class="text-red-500 text-xs" />
-			</Field>
-		</FieldSet>
-		<FieldSet class="mt-6">
-			<FormTitle>Items</FormTitle>
-			<Field name="insureItems" rules="required" v-slot="{ field, errors }">
-				<Radio
-					v-bind="field"
-					label="Do you want to insure items?"
-					:options="insureItemsOptions"
-					isButtons
-					@update:value="handleInputValue('insureItems', $event)"
-				/>
-				<ErrorMessage name="insureItems" class="text-red-500 text-xs" />
-			</Field>
-			<FieldSet
-				v-if="formValues.insureItems === true"
-				class="mt-4 border-1-gray-300 border p-4 rounded"
-			>
-				<div
-					class="flex flex-row gap-0 items-end flex-flow-wrap"
-					v-for="(item, index) in itemsToInsure"
-					:key="index"
-				>
-					<Field
-						:name="`insureItem${index + 1}`"
-						rules="required"
-						v-slot="{ field, errors }"
-					>
-						<Input
-							v-bind="field"
-							:index="index"
-							:label="`Item ${index + 1}`"
-							:class="{ 'flex-grow': true, 'mt-4': index > 0 }"
-							@update:value="handleInputValue('itemsToInsure', $event, index)"
-							:borderRadius="
-								itemsToInsure.length > 1 ? '6px 0px 0px 6px' : undefined
-							"
-						/>
-						<Btn
-							v-if="formValues.itemsToInsure.length > 1"
-							class="px-0 !ml-0 h-[42px] rounded-tl-none rounded-bl-none"
-							:style="{
-								lineHeight: '100%',
-							}"
-							text="Delete"
-							@click="deleteItemToInsure(index)"
-							isRed
-						/>
-						<ErrorMessage
-							:name="`insureItem${index + 1}`"
-							class="text-red-500 text-xs w-full"
-						/>
-					</Field>
-				</div>
-				<Btn
-					class="mt-6 text-right cursor-pointer"
-					text="Add another"
-					@click="addItemToInsure"
-				/>
+	<div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto text-black">
+		<div v-if="completed">
+			<h2 class="text-2xl font-bold mb-4">Thank you!</h2>
+			<p>Your form has been submitted successfully.</p>
+		</div>
+		<Form v-else @submit="onSubmit">
+			<FieldSet>
+				<FormTitle>Customer</FormTitle>
+				<Field name="name" rules="required" v-slot="{ field, errors }">
+					<Input
+						v-bind="field"
+						label="Name"
+						placeholder="My name is..."
+						@update:value="handleInputValue('name', $event)"
+					/>
+					<ErrorMessage name="name" class="text-red-500 text-xs" />
+				</Field>
 			</FieldSet>
-		</FieldSet>
-		<FieldSet class="mt-6">
-			<FormTitle>Policy</FormTitle>
-			<Field name="startDate" rules="required" v-slot="{ field, errors }">
-				<Date
-					v-bind="field"
-					label="Start Date"
-					placeholder="Select a date"
-					:min-date="minDate"
-					:max-date="maxDate"
-					:value="formValues.startDate"
-					@update:value="handleInputValue('startDate', $event)"
-				/>
-				<ErrorMessage name="startDate" class="text-red-500 text-xs" />
-			</Field>
-			<Field name="indemnityLimit" rules="required" v-slot="{ field, errors }">
-				<Select
-					v-bind="field"
-					class="mt-4"
-					label="Limit of indemnity"
-					:options="indemnityOptions"
-					placeholder="Please select"
-					:value="formValues.indemnityLimit"
-					@update:value="handleInputValue('indemnityLimit', $event)"
-				/>
-				<ErrorMessage name="indemnityLimit" class="text-red-500 text-xs" />
-			</Field>
-			<Field name="excess" rules="required" v-slot="{ field, errors }">
-				<Radio
-					v-bind="field"
-					class="mt-4"
-					label="Excess"
-					:options="excessOptions"
-					:value="formValues.excess"
-					@update:value="handleInputValue('excess', $event)"
-				/>
-				<ErrorMessage name="excess" class="text-red-500 text-xs" />
-			</Field>
-		</FieldSet>
-		<FieldSet class="mt-6 text-right">
-			<Btn text="Submit" isBlue type="submit" />
-		</FieldSet>
-	</Form>
+			<FieldSet class="mt-6">
+				<FormTitle>Items</FormTitle>
+				<Field name="insureItems" rules="required" v-slot="{ field, errors }">
+					<Radio
+						v-bind="field"
+						label="Do you want to insure items?"
+						:options="insureItemsOptions"
+						isButtons
+						@update:value="handleInputValue('insureItems', $event)"
+					/>
+					<ErrorMessage name="insureItems" class="text-red-500 text-xs" />
+				</Field>
+				<FieldSet
+					v-if="formValues.insureItems === true"
+					class="mt-4 border-1-gray-300 border p-4 rounded"
+				>
+					<div
+						class="flex flex-row gap-0 items-end flex-flow-wrap"
+						v-for="(item, index) in itemsToInsure"
+						:key="index"
+					>
+						<Field
+							:name="`insureItem${index + 1}`"
+							rules="required"
+							v-slot="{ field, errors }"
+						>
+							<Input
+								v-bind="field"
+								:index="index"
+								:label="`Item ${index + 1}`"
+								:class="{ 'flex-grow': true, 'mt-4': index > 0 }"
+								@update:value="handleInputValue('itemsToInsure', $event, index)"
+								:borderRadius="
+									itemsToInsure.length > 1 ? '6px 0px 0px 6px' : undefined
+								"
+							/>
+							<Btn
+								v-if="formValues.itemsToInsure.length > 1"
+								class="px-0 !ml-0 h-[42px] rounded-tl-none rounded-bl-none"
+								:style="{
+									lineHeight: '100%',
+								}"
+								text="Delete"
+								@click="deleteItemToInsure(index)"
+								isRed
+							/>
+							<ErrorMessage
+								:name="`insureItem${index + 1}`"
+								class="text-red-500 text-xs w-full"
+							/>
+						</Field>
+					</div>
+					<Btn
+						class="mt-6 text-right cursor-pointer"
+						text="Add another"
+						@click="addItemToInsure"
+					/>
+				</FieldSet>
+			</FieldSet>
+			<FieldSet class="mt-6">
+				<FormTitle>Policy</FormTitle>
+				<Field name="startDate" rules="required" v-slot="{ field, errors }">
+					<Date
+						v-bind="field"
+						label="Start Date"
+						placeholder="Select a date"
+						:min-date="minDate"
+						:max-date="maxDate"
+						:value="formValues.startDate"
+						@update:modelValue="handleInputValue('startDate', $event)"
+					/>
+					<ErrorMessage name="startDate" class="text-red-500 text-xs" />
+				</Field>
+				<Field
+					name="indemnityLimit"
+					rules="required"
+					v-slot="{ field, errors }"
+				>
+					<Select
+						v-bind="field"
+						class="mt-4"
+						label="Limit of indemnity"
+						:options="indemnityOptions"
+						placeholder="Please select"
+						:value="formValues.indemnityLimit"
+						@update:value="handleInputValue('indemnityLimit', $event)"
+					/>
+					<ErrorMessage name="indemnityLimit" class="text-red-500 text-xs" />
+				</Field>
+				<Field name="excess" rules="required" v-slot="{ field, errors }">
+					<Radio
+						v-bind="field"
+						class="mt-4"
+						label="Excess"
+						:options="excessOptions"
+						:value="formValues.excess"
+						@update:value="handleInputValue('excess', $event)"
+					/>
+					<ErrorMessage name="excess" class="text-red-500 text-xs" />
+				</Field>
+			</FieldSet>
+			<FieldSet class="mt-6 text-right">
+				<Btn text="Submit" isBlue type="submit" />
+			</FieldSet>
+		</Form>
+	</div>
 </template>
 <script setup lang="ts">
 	import {
@@ -171,6 +173,8 @@
 		{ value: '500', text: '£500' },
 		{ value: '1000', text: '£1,000' },
 	];
+
+	const completed = ref(false);
 
 	function addItemToInsure() {
 		itemsToInsure.value.push({ value: '' });
@@ -225,7 +229,9 @@
 
 	function onSubmit(values: any) {
 		// values contains all validated form data
-		console.log('Form submitted!', values);
+		console.log('Form submitted!', toRaw(formValues));
+
+		completed.value = true;
 	}
 </script>
 <style scoped lang="scss"></style>

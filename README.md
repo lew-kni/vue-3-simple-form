@@ -8,15 +8,16 @@ A preview version of this build is available [here](https://lew-kni.github.io/vu
 
 - ✅ Vue.js ~~or Knockout.js~~
 - ✅ Tailwind
-- ❌ Responsive
-  - ❌ Mobile
-  - ❌ Tablet
-  - ❌ Desktop
-- ❌ Datepicker
-- ❌ Limit of Indemnity Dropdown
-- ❌ Allow deletion of insured items > 1
-- ❌ Print to console on submit
-  
+- ✅ Responsive
+  - ✅ Mobile
+  - ✅ Tablet
+  - ✅ Desktop
+- ✅ Datepicker
+- ✅ Limit of Indemnity Dropdown
+- ✅v Allow deletion of insured items > 1
+- ✅ Print to console on submit
+- ✅ Form Validation (extra)
+
 ## Setup
 
 Prerequisites

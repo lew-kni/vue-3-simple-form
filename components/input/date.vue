@@ -25,6 +25,7 @@
 	const date = ref(null);
 
 	const props = defineProps({
+		modelValue: String,
 		label: {
 			type: String,
 			default: '',
@@ -44,11 +45,11 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:value ', value: string | null): void;
+		(e: 'update:modelValue', value: string | null): void;
 	}>();
 
 	watch(date, (newDate) => {
-		emit('update:value', newDate);
+		emit('update:modelValue', newDate);
 	});
 </script>
 <style scoped lang="scss"></style>
