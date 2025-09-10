@@ -2,8 +2,6 @@
 
 This project is a simple form that allows a user to set their insurance preferences and list items of interest that they wish to insure. Submitting the form will log all collected data to a console object.
 
-A preview version of this build is available [here](https://lew-kni.github.io/vue-3-simple-form/).
-
 ## Requirements
 
 - ✅ Vue.js ~~or Knockout.js~~
@@ -14,7 +12,7 @@ A preview version of this build is available [here](https://lew-kni.github.io/vu
   - ✅ Desktop
 - ✅ Datepicker
 - ✅ Limit of Indemnity Dropdown
-- ✅v Allow deletion of insured items > 1
+- ✅ Allow deletion of insured items > 1
 - ✅ Print to console on submit
 - ✅ Form Validation (extra)
 
