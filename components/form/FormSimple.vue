@@ -35,8 +35,8 @@
 				>
 					<div
 						class="flex flex-row gap-0 items-end flex-flow-wrap"
-						v-for="(item, index) in itemsToInsure"
-						:key="index"
+						v-for="(item, index) in formValues.itemsToInsure"
+						:key="item.id"
 					>
 						<Field
 							:name="`insureItem${index + 1}`"
@@ -45,12 +45,16 @@
 						>
 							<Input
 								v-bind="field"
-								:index="index"
+								:index="item.id"
 								:label="`Item ${index + 1}`"
 								:class="{ 'flex-grow': true, 'mt-4': index > 0 }"
-								@update:value="handleInputValue('itemsToInsure', $event, index)"
+								@update:value="
+									handleInputValue('itemsToInsure', $event, item.id)
+								"
 								:borderRadius="
-									itemsToInsure.length > 1 ? '6px 0px 0px 6px' : undefined
+									formValues.itemsToInsure.length > 1
+										? '6px 0px 0px 6px'
+										: undefined
 								"
 							/>
 							<Btn
@@ -60,7 +64,7 @@
 									lineHeight: '100%',
 								}"
 								text="Delete"
-								@click="deleteItemToInsure(index)"
+								@click="deleteItemToInsure(item.id)"
 								isRed
 							/>
 							<ErrorMessage
@@ -143,7 +147,7 @@
 	interface FormValues {
 		name: string;
 		insureItems: boolean | string;
-		itemsToInsure: { value: string }[];
+		itemsToInsure: { id: number; value: string }[];
 		startDate: string;
 		indemnityLimit: string;
 		excess: string;
@@ -152,7 +156,7 @@
 	const formValues = reactive<FormValues>({
 		name: '',
 		insureItems: '',
-		itemsToInsure: [{ value: '' }],
+		itemsToInsure: [{ id: Date.now() + Math.random(), value: '' }],
 		startDate: '',
 		indemnityLimit: '',
 		excess: '',
@@ -162,7 +166,7 @@
 		{ value: true, text: 'Yes' },
 		{ value: false, text: 'No' },
 	];
-	const itemsToInsure = ref([{ value: '' }]);
+	const itemsToInsure = ref([{ id: Date.now() + Math.random(), value: '' }]);
 	const indemnityOptions = [
 		{ value: '1000000', text: '£1,000,000' },
 		{ value: '2000000', text: '£2,000,000' },
@@ -177,8 +181,8 @@
 	const completed = ref(false);
 
 	function addItemToInsure() {
-		itemsToInsure.value.push({ value: '' });
-		formValues.itemsToInsure.push({ value: '' });
+		const newId = Date.now() + Math.random();
+		formValues.itemsToInsure.push({ id: newId, value: '' });
 	}
 
 	const toDateString = (date: Date) => date.toISOString().split('T')[0];
@@ -188,44 +192,29 @@
 	maxDateObj.setDate(maxDateObj.getDate() + 15); // 15 days from now
 	const maxDate = toDateString(maxDateObj);
 
-	function deleteItemToInsure(index: number) {
-		itemsToInsure.value.splice(index, 1);
-		formValues.itemsToInsure.splice(index, 1);
+	function deleteItemToInsure(id: number) {
+		const idx = formValues.itemsToInsure.findIndex((item) => item.id === id);
+		if (idx !== -1 && formValues.itemsToInsure.length > 1) {
+			formValues.itemsToInsure.splice(idx, 1);
+		}
 	}
 
 	function handleInputValue(
 		field: keyof FormValues,
 		value: any,
-		index: number | null = null
+		id: number | null = null
 	) {
-		if (field === 'itemsToInsure') {
-			formValues.itemsToInsure[index!] = { value };
+		if (field === 'itemsToInsure' && id !== null) {
+			const idx = formValues.itemsToInsure.findIndex((item) => item.id === id);
+			if (idx !== -1) {
+				formValues.itemsToInsure[idx].value = value;
+			}
 		} else if (field === 'insureItems') {
 			formValues.insureItems = value === true || value === 'true';
 		} else {
 			(formValues as any)[field] = value;
 		}
 	}
-
-	// const isFormComplete = computed(() => {
-	// 	console.log('Checking form completeness...', formValues);
-	// 	const mainFieldsFilled =
-	// 		!!formValues.name &&
-	// 		formValues.insureItems !== '' &&
-	// 		!!formValues.startDate &&
-	// 		!!formValues.indemnityLimit &&
-	// 		!!formValues.excess;
-
-	// 	// If insureItems is true
-	// 	let itemsFilled = true;
-	// 	if (formValues.insureItems === true) {
-	// 		itemsFilled =
-	// 			formValues.itemsToInsure.length > 0 &&
-	// 			formValues.itemsToInsure.every((item) => !!item.value);
-	// 	}
-
-	// 	return mainFieldsFilled && itemsFilled;
-	// });
 
 	function onSubmit(values: any) {
 		// values contains all validated form data
