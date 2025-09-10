@@ -19,7 +19,11 @@
 			</FieldSet>
 			<FieldSet class="mt-6">
 				<FormTitle>Items</FormTitle>
-				<Field name="insureItems" rules="required" v-slot="{ field, errors }">
+				<Field
+					name="insureItems"
+					:rules="formValues.insureItems === null ? 'required' : ''"
+					v-slot="{ field, errors }"
+				>
 					<Radio
 						v-bind="field"
 						label="Do you want to insure items?"
@@ -40,7 +44,7 @@
 					>
 						<Field
 							:name="`insureItem${index + 1}`"
-							rules="required"
+							:rules="formValues.insureItems === true ? 'required' : ''"
 							v-slot="{ field, errors }"
 						>
 							<Input
@@ -146,7 +150,7 @@
 
 	interface FormValues {
 		name: string;
-		insureItems: boolean | string;
+		insureItems: boolean | string | null;
 		itemsToInsure: { id: number; value: string }[];
 		startDate: string;
 		indemnityLimit: string;
@@ -155,7 +159,7 @@
 
 	const formValues = reactive<FormValues>({
 		name: '',
-		insureItems: '',
+		insureItems: null,
 		itemsToInsure: [{ id: Date.now() + Math.random(), value: '' }],
 		startDate: '',
 		indemnityLimit: '',
