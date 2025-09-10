@@ -1,24 +1,42 @@
-# vue-3-simple-form
+# Vue 3 Simple Form
 
-## Project setup
+This project is a simple form that allows a user to set their insurance preferences and list items of interest that they wish to insure. Submitting the form will log all collected data to a console object.
+
+A preview version of this build is available [here](https://lew-kni.github.io/vue-3-simple-form/).
+
+## Requirements
+
+- ✅ Vue.js ~~or Knockout.js~~
+- ✅ Tailwind
+- ❌ Responsive
+  - ❌ Mobile
+  - ❌ Tablet
+  - ❌ Desktop
+- ❌ Datepicker
+- ❌ Limit of Indemnity Dropdown
+- ❌ Allow deletion of insured items > 1
+- ❌ Print to console on submit
+  
+## Setup
+
+Prerequisites
+
+```bash
+Node.js - 18.x
 ```
+
+Make sure to install dependencies:
+
+```bash
+# pnpm
 pnpm install
 ```
 
-### Compiles and hot-reloads for development
-```
-pnpm run serve
-```
+## Development Server
 
-### Compiles and minifies for production
-```
-pnpm run build
-```
+Start the development server on `http://localhost:3000`:
 
-### Lints and fixes files
+```bash
+# pnpm
+pnpm dev
 ```
-pnpm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
